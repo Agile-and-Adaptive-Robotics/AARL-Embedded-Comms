@@ -1,0 +1,4 @@
+aarl_embedded_comms	KEYWORD1
+txFrame	KEYWORD2
+rxService	KEYWORD2
+RxParser	KEYWORD1

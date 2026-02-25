@@ -1,0 +1,1 @@
+This folder contains an Arduino-compatible embedded transport library. See the root README for installation instructions.

@@ -1,0 +1,90 @@
+# =================================
+# matlab_transport_validation.txt
+# =================================
+# Purpose:
+# Validate AARL Embedded Comms transport layer end-to-end:
+#   - framing + CRC16 (CCITT-FALSE)
+#   - seq handling
+#   - command/response
+#   - sustained streaming telemetry
+#
+# This test is intentionally sensor-free and should be repeatable on any bench setup.
+
+# ---------------------------
+# Date / operator / location
+# ---------------------------
+date_local:        2026-02-25
+time_local:        06:30
+operator:          Stu McNeal
+site:              lab 
+
+# ---------------------------
+# Protocol
+# ---------------------------
+frame_format:      [AA][55][TYPE][SEQ][LEN][PAYLOAD...][CRC16 lo][CRC16 hi]
+crc16_variant:     CRC-16/CCITT-FALSE (poly=0x1021, init=0xFFFF, refin=false, refout=false, xorout=0x0000)
+crc_input:         [TYPE][SEQ][LEN][PAYLOAD...]
+
+# ---------------------------
+# Hardware under test
+# ---------------------------
+mcu_board:         Teensy 4.1
+firmware_sketch:   embedded/aarl_embedded_comms/examples/protocol_compliance/protocol_compliance.ino
+baud_rate:         2000000
+
+# ---------------------------
+# Host environment
+# ---------------------------
+host_os:           Windows 11 
+matlab_version:    R2025b
+python_version:    n/a
+usb_uart:          native USB
+
+# ---------------------------
+# Test procedure
+# ---------------------------
+# 1) Flash protocol_compliance.ino to MCU.
+# 2) On host, run MATLAB test:
+#       pipeline_test_with_commands(<PORT>, 2000000)
+#    Expected:
+#       PING seq=0 -> PONG OK
+#       SET_STREAM_US(5000) seq=1 -> ACK status=0
+#       STREAM_ENABLE(1) seq=2 -> ACK status=0
+#       Stream of SENSE_FRAME at ~200 Hz for 10 seconds.
+#
+# Notes:
+# - CMD_SET_STREAM_US sets telemetry period in microseconds.
+# - SENSE_FRAME payload length is 36 bytes (synthetic pattern in compliance sketch).
+
+# ---------------------------
+# Expected outputs / pass criteria
+# ---------------------------
+pass_criteria:
+  - PONG received matching seq for CMD_PING
+  - ACKNOWLEDGED received matching seq for CMD_SET_STREAM_US with status=0
+  - ACKNOWLEDGED received matching seq for CMD_STREAM_ENABLE with status=0
+  - During 10 s window: SENSE_FRAME count >= 1800 (>= 180 Hz average)  # conservative
+  - No persistent CRC failures (occasional loss acceptable on USB, but should be rare)
+
+# ---------------------------
+# Observed results
+# ---------------------------
+port:              [COM#]
+cmd_set_stream_us: 5000
+test_duration_s:   10.0
+
+console_output:
+  PING seq=0 -> PONG OK
+  SET_STREAM_US(5000) seq=1 -> ACK status=0
+  STREAM_ENABLE(1) seq=2 -> ACK status=0
+
+  Messages received during test: 1998
+  Pipeline speed: 199.80 Hz
+
+result: PASS
+
+# ---------------------------
+# Notes / anomalies
+# ---------------------------
+notes:
+  - First run after connect always drops 1-2 frames. Unknown cause.

@@ -1,0 +1,19 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# MATLAB
+*.asv
+
+# Python
+__pycache__/
+*.pyc
+
+# Arduino build junk
+*.ino.eep
+*.ino.hex
+*.elf
+build/
+
+# VSCode
+.vscode/
