@@ -106,7 +106,7 @@ The repository provides host-side implementations in **Python** and **MATLAB**. 
 The embedded transport layer is provided as an Arduino-style library
 located in:
 
-`embedded/aarl_embedded_comms/`
+[`embedded/aarl_embedded_comms/`](embedded/aarl_embedded_comms/)
 
 
 This folder is structured to be directly installable into the Arduino ecosystem.
