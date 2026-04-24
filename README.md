@@ -13,6 +13,24 @@ The focus is reliability and reproducibility rather than features.
 
 ---
 
+## ⚠️ Supported Toolchain (Read First)
+
+This project is validated with the following environment:
+
+- **Arduino IDE**: 2.3.4  
+- **Python**: 3.10–3.12 (tested on 3.11)  
+- **MATLAB**: R2022b–R2025b (tested on R2025b)
+
+Arduino IDE **2.3.5 and newer are not currently supported**. These versions
+introduce changes to the Arduino CLI backend that affect library discovery
+and path resolution. While they *may* work, they are not part of the validated
+lab environment.
+
+If you encounter unexpected behavior, first replicate results using the
+validated configuration above before debugging further.
+
+---
+
 ### Why this exists
 
 This project extracts a minimal, durable transport layer that is:
@@ -111,7 +129,7 @@ located in:
 
 This folder is structured to be directly installable into the Arduino ecosystem.
 
-### Manual Installation
+### Manual Installation (Arduino IDE: 2.3.4)
 
 1. Locate your Arduino libraries directory:
 
@@ -137,6 +155,7 @@ Arduino/
         └── aarl_embedded_comms/
             ├── src/
             ├── examples/
+            ├── keywords.txt
             └── library.properties
 ```
 
@@ -183,6 +202,7 @@ This allows:
 - Compatibility with Arduino Library Manager conventions
   
 ---
+
 ### Python Example
 
 ```python
